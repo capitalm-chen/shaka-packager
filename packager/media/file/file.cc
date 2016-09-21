@@ -14,6 +14,7 @@
 #include "packager/media/file/memory_file.h"
 #include "packager/media/file/threaded_io_file.h"
 #include "packager/media/file/udp_file.h"
+#include "packager/media/file/http_file.h"
 
 DEFINE_uint64(io_cache_size,
               32ULL << 20,
@@ -33,6 +34,7 @@ namespace media {
 
 const char* kLocalFilePrefix = "file://";
 const char* kUdpFilePrefix = "udp://";
+const char* kHttpFilePrefix = "http://";
 const char* kMemoryFilePrefix = "memory://";
 
 namespace {
@@ -63,6 +65,14 @@ File* CreateUdpFile(const char* file_name, const char* mode) {
   return new UdpFile(file_name);
 }
 
+File* CreateHttpFile(const char* file_name, const char* mode) {
+  if (strcmp(mode, "r")) {
+    NOTIMPLEMENTED() << "HttpFile only supports read (receive) mode.";
+    return NULL;
+  }
+  return new HttpFile(file_name);
+}
+
 File* CreateMemoryFile(const char* file_name, const char* mode) {
   return new MemoryFile(file_name, mode);
 }
@@ -83,6 +93,12 @@ static const SupportedTypeInfo kSupportedTypeInfo[] = {
     kUdpFilePrefix,
     strlen(kUdpFilePrefix),
     &CreateUdpFile,
+    NULL
+  },
+  {
+    kHttpFilePrefix,
+    strlen(kHttpFilePrefix),
+    &CreateHttpFile,
     NULL
   },
   {

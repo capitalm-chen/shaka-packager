@@ -25,6 +25,7 @@
         'threaded_io_file.cc',
         'threaded_io_file.h',
         'udp_file.h',
+        'http_file.h',
       ],
       'conditions': [
         ['OS == "win"', {
@@ -34,6 +35,7 @@
         }, {
           'sources': [
             'udp_file_posix.cc',
+            'http_file_posix.cc',
           ],
         }],
       ],
