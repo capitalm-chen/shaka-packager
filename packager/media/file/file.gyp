@@ -31,6 +31,7 @@
         ['OS == "win"', {
           'sources': [
             'udp_file_win.cc',
+            'http_file_win.cc',
           ],
         }, {
           'sources': [

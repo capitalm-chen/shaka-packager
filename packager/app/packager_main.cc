@@ -50,6 +50,7 @@
 #include <codecvt>
 #include <functional>
 #include <locale>
+#include <winsock2.h>
 #endif  // defined(OS_WIN)
 
 DEFINE_bool(use_fake_clock_for_muxer,
@@ -573,6 +574,14 @@ int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
     utf8_argv[idx] = new char[utf8_arg.size()];
     memcpy(utf8_argv[idx], &utf8_arg[0], utf8_arg.size());
   }
+
+  WSADATA wsa_data;
+  int wsastartup_result = WSAStartup(MAKEWORD(2,2), &wsa_data);
+  if (wsastartup_result != 0) {
+      printf("WSAStartup failed with error: %d\n", wsastartup_result);
+      return shaka::media::kInternalError;
+  }
+
   return shaka::media::PackagerMain(argc, utf8_argv.get());
 }
 #else

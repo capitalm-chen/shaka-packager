@@ -11,6 +11,14 @@
 
 #include <string>
 
+#ifdef WIN32
+#include <winsock2.h>
+#else
+#if ! defined(SOCKET)
+  typedef int SOCKET;
+#endif
+#endif
+
 #include "packager/base/compiler_specific.h"
 #include "packager/media/file/file.h"
 
@@ -46,7 +54,7 @@ class HttpFile : public File {
   bool Open() override;
 
  private:
-  int socket_;
+  SOCKET socket_;
 
   DISALLOW_COPY_AND_ASSIGN(HttpFile);
 };
