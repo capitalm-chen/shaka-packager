@@ -51,6 +51,9 @@
 #include <functional>
 #include <locale>
 #include <winsock2.h>
+#define DEFAULT_LOG_FILE L"log.txt"
+#else
+#define DEFAULT_LOG_FILE "log.txt"
 #endif  // defined(OS_WIN)
 
 DEFINE_bool(use_fake_clock_for_muxer,
@@ -523,7 +526,8 @@ int PackagerMain(int argc, char** argv) {
 
   // Set up logging.
   logging::LoggingSettings log_settings;
-  log_settings.logging_dest = logging::LOG_TO_SYSTEM_DEBUG_LOG;
+  log_settings.logging_dest = logging::LOG_TO_FILE;
+  log_settings.log_file = DEFAULT_LOG_FILE;
   CHECK(logging::InitLogging(log_settings));
 
   google::SetUsageMessage(base::StringPrintf(kUsage, argv[0]));
