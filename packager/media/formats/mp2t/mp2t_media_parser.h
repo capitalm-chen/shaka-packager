@@ -88,6 +88,9 @@ class Mp2tMediaParser : public MediaParser {
   // Whether |init_cb_| has been invoked.
   bool is_initialized_;
 
+  // When this parser instance is created.
+  const time_t creation_time;
+
   DISALLOW_COPY_AND_ASSIGN(Mp2tMediaParser);
 };
 

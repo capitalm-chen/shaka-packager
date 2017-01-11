@@ -228,7 +228,7 @@ bool AddStreamToMuxer(const std::vector<std::unique_ptr<MediaStream>>& streams,
   // stream does not exist in the input.
   if (!stream) {
     LOG(ERROR) << "No " << stream_selector << " stream found in the input.";
-    return false;
+    return true;
   }
 
   if (!language_override.empty()) {

@@ -149,7 +149,8 @@ void PidState::ResetState() {
 
 Mp2tMediaParser::Mp2tMediaParser()
     : sbr_in_mimetype_(false),
-      is_initialized_(false) {
+      is_initialized_(false),
+      creation_time(time(NULL)) {
 }
 
 Mp2tMediaParser::~Mp2tMediaParser() {}
@@ -187,6 +188,17 @@ bool Mp2tMediaParser::Flush() {
 
 bool Mp2tMediaParser::Parse(const uint8_t* buf, int size) {
   DVLOG(1) << "Mp2tMediaParser::Parse size=" << size;
+  if (!is_initialized_ && time(NULL) > creation_time + 2) {
+    DVLOG(1) << "Timeout reached while waiting for all streams.";
+    for (PidMap::const_iterator iter = pids_.begin(); iter != pids_.end();) {
+      if (!iter->second->config()) {
+        pids_.erase(iter++);
+      } else {
+        ++iter;
+      }
+    }
+    FinishInitializationIfNeeded();
+  }
 
   // Add the data to the parser state.
   ts_byte_queue_.Push(buf, size);
